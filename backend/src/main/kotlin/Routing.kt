@@ -96,7 +96,7 @@ fun Application.configureRouting() {
             )
 
             val githubResponse: HttpResponse =
-                httpClient.post("https://api.github.com/repos/prudhvir3ddy/wtm/dispatches") {
+                httpClient.post("https://api.github.com/repos/prudhvir3ddy/web2mob/dispatches") {
                     header(HttpHeaders.Accept, "application/vnd.github+json")
                     header(
                         HttpHeaders.Authorization,
