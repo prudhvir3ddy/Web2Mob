@@ -24,10 +24,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Serializable
+data class ReceivedPayload(
+    val url: String,
+    @SerialName("package_name")
+    val packageName: String,
+    val secret: String
+)
 
 @Serializable
 data class ClientPayload(
-    val url: String, @SerialName("package_name")
+    val url: String,
+    @SerialName("package_name")
     val packageName: String
 )
 
@@ -49,9 +57,15 @@ fun Application.configureRouting() {
             call.respondText("Yeeah! i'm up 🥱")
         }
         post("/generate") {
-            val request = call.receive<ClientPayload>()
+            val request = call.receive<ReceivedPayload>()
             val url = request.url
             val packageName = request.packageName
+            val secret = request.secret
+
+            if (secret != "bandboy99") {
+                call.respond(HttpStatusCode.Unauthorized, "Invalid secret")
+                return@post
+            }
 
             val githubRequest = GitHubRequest(
                 eventType = "build-app",
