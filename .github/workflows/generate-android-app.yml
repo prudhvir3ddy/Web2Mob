@@ -1,0 +1,59 @@
+name: Build and Release Android App
+
+on:
+  repository_dispatch:
+    types: [build-app]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: wtm-android # Check out code into wtm-android directory
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Retrieve Payload
+        id: payload
+        run: |
+          echo "URL=$(jq -r .url "$GITHUB_EVENT_PATH")" >> "$GITHUB_OUTPUT"
+          echo "PACKAGE_NAME=$(jq -r .package_name "$GITHUB_EVENT_PATH")" >> "$GITHUB_OUTPUT"
+          echo "event_payload=${{ toJSON(github.event.client_payload) }}" >> "$GITHUB_ENV"
+
+      - name: log payload
+        run: |
+          echo "${{ env.event_payload }}"
+
+      - name: check payload values
+        run: |
+          if [[ -z "${{ steps.payload.outputs.URL }}" || -z "${{ steps.payload.outputs.PACKAGE_NAME }}" ]]; then
+            echo "URL or PACKAGE_NAME is empty. Please provide them in the event payload."
+            exit 1
+          fi
+
+      - name: Replace URL and Package Name
+        run: |
+          echo "Replacing URL with ${{ steps.payload.outputs.URL }}"
+          sed -i "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ steps.payload.outputs.URL }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          echo "Replacing package name with ${{ steps.payload.outputs.PACKAGE_NAME }}"
+          sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ steps.payload.outputs.PACKAGE_NAME }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          sed -i "s|applicationId \"com.prudhvir3ddy.wtm_android\"|applicationId \"${{ steps.payload.outputs.PACKAGE_NAME }}\"|g" wtm-android/app/build.gradle.kts
+
+      - name: Make gradlew executable
+        run: chmod +x wtm-android/gradlew
+
+      - name: Build Release APK
+        run: ./wtm-android/gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: wtm-android/app/build/outputs/apk/release/app-release-unsigned.apk
