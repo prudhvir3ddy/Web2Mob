@@ -31,7 +31,7 @@ jobs:
           sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.package_name }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
           sed -i "s|applicationId = \"com.prudhvir3ddy.wtm_android\"|applicationId = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
           sed -i "s|namespace = \"com.prudhvir3ddy.wtm_android\"|namespace = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
-          sed -i "s|<string name=\"app_name\">wtm-android</string>|<string name="\app_name\">${{ github.event.client_payload.package_name }}</string>\"|g" wtm-android/app/src/main/res/values/strings.xml
+          sed -i "s|<string name=\"app_name\">wtm-android</string>|<string name=\"app_name\">${{ github.event.client_payload.package_name }}</string>\"|g" wtm-android/app/src/main/res/values/strings.xml
 
       - name: Make gradlew executable
         run: chmod +x wtm-android/gradlew
