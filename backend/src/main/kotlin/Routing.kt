@@ -9,7 +9,9 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.request.receive
@@ -18,20 +20,22 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-@Serializable
-data class SubmissionRequest(val url: String)
 
 @Serializable
-data class SubmissionResponse(val jobId: String, val message: String = "URL received and processing scheduled.")
+data class ClientPayload(
+    val url: String, @SerialName("package_name")
+    val packageName: String
+)
 
 @Serializable
-data class ClientPayload(val url: String, val package_name: String)
-
-@Serializable
-data class GitHubRequest(val event_type: String, val client_payload: ClientPayload)
+data class GitHubRequest(
+    @SerialName("event_type") val eventType: String,
+    @SerialName("client_payload") val clientPayload: ClientPayload
+)
 
 fun Application.configureRouting() {
     val httpClient = HttpClient(CIO) {
@@ -42,20 +46,18 @@ fun Application.configureRouting() {
 
     routing {
         get("/") {
-            call.respondText("Hello World!")
+            call.respondText("Yeeah! i'm up 🥱")
         }
         post("/generate") {
-            val request = call.receive<SubmissionRequest>()
+            val request = call.receive<ClientPayload>()
             val url = request.url
-
-            val jobId = java.util.UUID.randomUUID().toString() // Placeholder for job ID
-            println("Received URL: $url, Job ID: $jobId")
+            val packageName = request.packageName
 
             val githubRequest = GitHubRequest(
-                event_type = "build-app",
-                client_payload = ClientPayload(
+                eventType = "build-app",
+                clientPayload = ClientPayload(
                     url = url,
-                    package_name = "com.example.newapp"
+                    packageName = packageName
                 )
             )
 
@@ -72,9 +74,13 @@ fun Application.configureRouting() {
                     )
                 }
 
-            println("GitHub API Response: ${Json.encodeToString(githubRequest)} ${githubResponse}")
+            println("GitHub API Response: $githubResponse")
 
-            call.respond(SubmissionResponse(jobId = jobId))
+            if (githubResponse.status.isSuccess()) {
+                call.respond(HttpStatusCode.OK)
+            } else {
+                call.respond(HttpStatusCode.ExpectationFailed)
+            }
         }
     }
 }
