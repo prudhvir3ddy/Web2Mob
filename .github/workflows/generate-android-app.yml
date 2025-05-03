@@ -2,7 +2,7 @@ name: Build and Release Android App
 
 on:
   repository_dispatch:
-    types: [build-app]
+    types: [ build-app ]
 
 jobs:
   build:
@@ -21,21 +21,24 @@ jobs:
       - name: Log Payload
         run: |
           echo "URL: ${{ github.event.client_payload.url }}"
-          echo "Package Name: ${{ github.event.client_payload.url.package_name }}"
+          echo "Package Name: ${{ github.event.client_payload.package_name }}"
 
       - name: Replace URL and Package Name
         run: |
           echo "Replacing URL with ${{ github.event.client_payload.url }}"
-          sed -i "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ github.event.client_payload.url }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
-          echo "Replacing package name with ${{ github.event.client_payload.url.package_name }}"
-          sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.url.package_name }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
-          sed -i "s|applicationId \"com.prudhvir3ddy.wtm_android\"|applicationId \"${{ github.event.client_payload.url.package_name }}\"|g" wtm-android/app/build.gradle.kts
+          sed "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ github.event.client_payload.url }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          echo "Replacing package name with ${{ github.event.client_payload.package_name }}"
+          sed "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.package_name }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          sed "s|applicationId = \"com.prudhvir3ddy.wtm_android\"|applicationId = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
+          sed "s|namespace = \"com.prudhvir3ddy.wtm_android\"|namespace = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
 
       - name: Make gradlew executable
         run: chmod +x wtm-android/gradlew
 
       - name: Build Release APK
-        run: ./wtm-android/gradlew assembleRelease
+        run: |
+          cd wtm-android
+          ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
