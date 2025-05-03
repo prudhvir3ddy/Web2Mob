@@ -9,35 +9,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           path: wtm-android # Check out code into wtm-android directory
 
+      # Step 2: Setup Java JDK
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Retrieve Payload
+      # Step 3: Retrieve and Validate Payload
+      - name: Retrieve and Validate Payload
         id: payload
         run: |
-          echo "URL=$(jq -r .url "$GITHUB_EVENT_PATH")" >> "$GITHUB_OUTPUT"
-          echo "PACKAGE_NAME=$(jq -r .package_name "$GITHUB_EVENT_PATH")" >> "$GITHUB_OUTPUT"
-          echo "event_payload=${{ toJSON(github.event.client_payload) }}" >> "$GITHUB_ENV"
-
-      - name: log payload
-        run: |
-          echo "${{ env.event_payload }}"
-
-      - name: check payload values
-        run: |
-          if [[ -z "${{ steps.payload.outputs.URL }}" || -z "${{ steps.payload.outputs.PACKAGE_NAME }}" ]]; then
-            echo "URL or PACKAGE_NAME is empty. Please provide them in the event payload."
+          URL=$(jq -r .url "$GITHUB_EVENT_PATH" | xargs)
+          PACKAGE_NAME=$(jq -r .package_name "$GITHUB_EVENT_PATH" | xargs)
+          if [[ -z "$URL" || -z "$PACKAGE_NAME" ]]; then
+            echo "Error: URL or PACKAGE_NAME is missing in the event payload."
             exit 1
           fi
+          echo "URL=$URL" >> "$GITHUB_OUTPUT"
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
 
+      # Step 4: Log payload (Optional but useful for debugging)
+      - name: Log Payload
+        run: |
+          echo "URL: ${{ steps.payload.outputs.URL }}"
+          echo "Package Name: ${{ steps.payload.outputs.PACKAGE_NAME }}"
+
+      # Step 5: Replace URL and Package Name
       - name: Replace URL and Package Name
         run: |
           echo "Replacing URL with ${{ steps.payload.outputs.URL }}"
@@ -46,12 +50,15 @@ jobs:
           sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ steps.payload.outputs.PACKAGE_NAME }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
           sed -i "s|applicationId \"com.prudhvir3ddy.wtm_android\"|applicationId \"${{ steps.payload.outputs.PACKAGE_NAME }}\"|g" wtm-android/app/build.gradle.kts
 
+      # Step 6: Make gradlew executable
       - name: Make gradlew executable
         run: chmod +x wtm-android/gradlew
 
+      # Step 7: Build Release APK
       - name: Build Release APK
         run: ./wtm-android/gradlew assembleRelease
 
+      # Step 8: Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
