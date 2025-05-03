@@ -26,11 +26,11 @@ jobs:
       - name: Replace URL and Package Name
         run: |
           echo "Replacing URL with ${{ github.event.client_payload.url }}"
-          sed "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ github.event.client_payload.url }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          sed -i "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ github.event.client_payload.url }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
           echo "Replacing package name with ${{ github.event.client_payload.package_name }}"
-          sed "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.package_name }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
-          sed "s|applicationId = \"com.prudhvir3ddy.wtm_android\"|applicationId = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
-          sed "s|namespace = \"com.prudhvir3ddy.wtm_android\"|namespace = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
+          sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.package_name }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          sed -i "s|applicationId = \"com.prudhvir3ddy.wtm_android\"|applicationId = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
+          sed -i "s|namespace = \"com.prudhvir3ddy.wtm_android\"|namespace = \"${{ github.event.client_payload.package_name }}\"|g" wtm-android/app/build.gradle.kts
 
       - name: Make gradlew executable
         run: chmod +x wtm-android/gradlew
