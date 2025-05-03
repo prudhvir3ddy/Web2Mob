@@ -48,6 +48,9 @@ data class GitHubRequest(
     @SerialName("client_payload") val clientPayload: ClientPayload
 )
 
+private val GITHUB_TOKEN = System.getenv("GITHUB_TOKEN")
+private val APP_SECRET = System.getenv("APP_SECRET")
+
 fun Application.configureRouting() {
     install(CORS) {
         allowMethod(HttpMethod.Get)
@@ -74,7 +77,7 @@ fun Application.configureRouting() {
             val packageName = request.packageName
             val secret = request.secret
 
-            if (secret != "bandboy99") {
+            if (secret != APP_SECRET) {
                 call.respond(HttpStatusCode.Unauthorized, "Invalid secret")
                 return@post
             }
@@ -92,7 +95,7 @@ fun Application.configureRouting() {
                     header(HttpHeaders.Accept, "application/vnd.github+json")
                     header(
                         HttpHeaders.Authorization,
-                        "Bearer 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"
+                        "Bearer $GITHUB_TOKEN"
                     )
                     contentType(ContentType.Application.Json)
                     setBody(
