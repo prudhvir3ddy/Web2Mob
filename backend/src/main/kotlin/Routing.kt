@@ -48,6 +48,11 @@ data class GitHubRequest(
     @SerialName("client_payload") val clientPayload: ClientPayload
 )
 
+@Serializable
+data class ErrorMessage(
+    val message: String
+)
+
 private val GITHUB_TOKEN = System.getenv("GITHUB_TOKEN")
 private val APP_SECRET = System.getenv("APP_SECRET")
 
@@ -78,7 +83,7 @@ fun Application.configureRouting() {
             val secret = request.secret
 
             if (secret != APP_SECRET) {
-                call.respond(HttpStatusCode.Unauthorized, "Invalid secret")
+                call.respond(HttpStatusCode.Unauthorized, ErrorMessage("Invalid secret"))
                 return@post
             }
 
