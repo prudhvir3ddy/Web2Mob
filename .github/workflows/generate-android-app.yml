@@ -9,56 +9,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           path: wtm-android # Check out code into wtm-android directory
 
-      # Step 2: Setup Java JDK
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Retrieve and Validate Payload
-      - name: Retrieve and Validate Payload
-        id: payload
-        run: |
-          URL=$(jq -r .url "$GITHUB_EVENT_PATH" | xargs)
-          PACKAGE_NAME=$(jq -r .package_name "$GITHUB_EVENT_PATH" | xargs)
-          if [[ -z "$URL" || -z "$PACKAGE_NAME" ]]; then
-            echo "Error: URL or PACKAGE_NAME is missing in the event payload."
-            exit 1
-          fi
-          echo "URL=$URL" >> "$GITHUB_OUTPUT"
-          echo "PACKAGE_NAME=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
-
-      # Step 4: Log payload (Optional but useful for debugging)
       - name: Log Payload
         run: |
-          echo "URL: ${{ steps.payload.outputs.URL }}"
-          echo "Package Name: ${{ steps.payload.outputs.PACKAGE_NAME }}"
+          echo "URL: ${{ github.event.client_payload.url }}"
+          echo "Package Name: ${{ github.event.client_payload.url.package_name }}"
 
-      # Step 5: Replace URL and Package Name
       - name: Replace URL and Package Name
         run: |
-          echo "Replacing URL with ${{ steps.payload.outputs.URL }}"
-          sed -i "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ steps.payload.outputs.URL }}\")|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
-          echo "Replacing package name with ${{ steps.payload.outputs.PACKAGE_NAME }}"
-          sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ steps.payload.outputs.PACKAGE_NAME }}|g" wtm-android/app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
-          sed -i "s|applicationId \"com.prudhvir3ddy.wtm_android\"|applicationId \"${{ steps.payload.outputs.PACKAGE_NAME }}\"|g" wtm-android/app/build.gradle.kts
+          echo "Replacing URL with ${{ github.event.client_payload.url }}"
+          sed -i "s|loadUrl(\"https://x.com/\")|loadUrl(\"${{ github.event.client_payload.url }}\")|g" app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          echo "Replacing package name with ${{ github.event.client_payload.url.package_name }}"
+          sed -i "s|package com.prudhvir3ddy.wtm_android|package ${{ github.event.client_payload.url.package_name }}|g" app/src/main/java/com/prudhvir3ddy/wtm_android/MainActivity.kt
+          sed -i "s|applicationId \"com.prudhvir3ddy.wtm_android\"|applicationId \"${{ github.event.client_payload.url.package_name }}\"|g" app/build.gradle.kts
 
-      # Step 6: Make gradlew executable
       - name: Make gradlew executable
         run: chmod +x wtm-android/gradlew
 
-      # Step 7: Build Release APK
       - name: Build Release APK
         run: ./wtm-android/gradlew assembleRelease
 
-      # Step 8: Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
