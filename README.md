@@ -3,6 +3,9 @@
 A service that converts web URLs into Android applications using GitHub Actions automation. This project allows you to
 quickly create a WebView-based Android app from any web URL with a custom package name
 
+**Work in progress ⚠️:** 
+Build iOS app 
+
 ### Features
 
 - Convert any website into an Android app
