@@ -32,14 +32,16 @@ data class ReceivedPayload(
     val url: String,
     @SerialName("package_name")
     val packageName: String,
-    val secret: String
+    val secret: String,
+    @SerialName("platform") val platform: String? = null
 )
 
 @Serializable
 data class ClientPayload(
     val url: String,
     @SerialName("package_name")
-    val packageName: String
+    val packageName: String,
+    @SerialName("platform") val platform: String
 )
 
 @Serializable
@@ -87,11 +89,22 @@ fun Application.configureRouting() {
                 return@post
             }
 
+            val targetPlatform = when (request.platform?.lowercase()) {
+                "ios" -> "ios"
+                else -> "android" // Default to Android if null, empty, "android", or anything else
+            }
+
+            val eventType = when (targetPlatform) {
+                "ios" -> "build-ios-app"
+                else -> "build-app"
+            }
+
             val githubRequest = GitHubRequest(
-                eventType = "build-app",
+                eventType = eventType,
                 clientPayload = ClientPayload(
                     url = url,
-                    packageName = packageName
+                    packageName = packageName,
+                    platform = targetPlatform
                 )
             )
 

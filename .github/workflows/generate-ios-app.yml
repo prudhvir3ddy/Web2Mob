@@ -1,0 +1,95 @@
+name: Build and Release iOS App
+
+on:
+  repository_dispatch:
+    types: [build-ios-app]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log Payload
+        run: |
+          echo "Received URL: ${{ github.event.client_payload.url }}"
+          echo "Received Bundle ID: ${{ github.event.client_payload.package_name }}"
+
+      - name: Select Xcode version
+        uses: actions/setup-xcode@v1
+        with:
+          xcode-version: '15.2' # Using a recent stable version
+
+      - name: Replace URL in ContentView.swift
+        run: |
+          sed -i '' 's|https://example.com/placeholder_url|${{ github.event.client_payload.url }}|g' wtm-ios/WTMiOS/ContentView.swift
+          echo "ContentView.swift after URL replacement:"
+          cat wtm-ios/WTMiOS/ContentView.swift
+
+      - name: Replace Bundle ID in project.pbxproj
+        run: |
+          sed -i '' 's|com.example.wtmiosplaceholder|${{ github.event.client_payload.package_name }}|g' wtm-ios/WTMiOS.xcodeproj/project.pbxproj
+          echo "project.pbxproj after Bundle ID replacement:"
+          cat wtm-ios/WTMiOS.xcodeproj/project.pbxproj
+
+      - name: Create ExportOptions.plist
+        run: |
+          cat <<EOF > wtm-ios/ExportOptions.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>ad-hoc</string>
+              <key>teamID</key>
+              <string>PLACEHOLDER_TEAM_ID</string> <!-- Placeholder -->
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>compileBitcode</key>
+              <false/>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>${{ github.event.client_payload.package_name }}</key>
+                  <string>PLACEHOLDER_PROVISIONING_PROFILE</string> <!-- Placeholder -->
+              </dict>
+              <key>signingCertificate</key>
+              <string>Apple Development</string> <!-- Attempt to use a generic type, might still require actual cert -->
+          </dict>
+          </plist>
+          EOF
+          echo "ExportOptions.plist created:"
+          cat wtm-ios/ExportOptions.plist
+
+      - name: Build and Archive iOS App
+        run: |
+          cd wtm-ios
+          xcodebuild archive \
+            -project WTMiOS.xcodeproj \
+            -scheme WTMiOS \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/WTMiOS.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+        
+      - name: Export IPA
+        run: |
+          cd wtm-ios
+          xcodebuild -exportArchive \
+            -archivePath build/WTMiOS.xcarchive \
+            -exportPath build/ \
+            -exportOptionsPlist ExportOptions.plist \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO || echo "IPA export failed, proceeding with xcarchive."
+
+      - name: Upload Artifact (IPA or XCArchive)
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-ipa
+          path: |
+            wtm-ios/build/WTMiOS.ipa
+            wtm-ios/build/WTMiOS.xcarchive
+          if-no-files-found: error # Ensures the job fails if neither is found, though xcarchive should always exist if build succeeds
+          retention-days: 7

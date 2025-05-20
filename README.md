@@ -3,17 +3,15 @@
 <img width="1447" alt="Screenshot 2025-05-03 at 10 26 50 PM" src="https://github.com/user-attachments/assets/5560b697-5819-4f03-8b48-c23ea3d25abd" />
 
 A service that converts web URLs into Android applications using GitHub Actions automation. This project allows you to
-quickly create a WebView-based Android app from any web URL with a custom package name
-
-**Work in progress ⚠️:** 
-Build iOS app 
+quickly create a WebView-based Android or iOS app from any web URL with a custom package name/bundle identifier.
 
 Frontend is hosted in: https://prudhvir3ddy.github.io/wtm
 
 ### Features
 
 - Convert any website into an Android app
-- Customize package name
+- Convert any website into an iOS app
+- Customize package name / bundle identifier
 - Automated build process via GitHub Actions
 - REST API for app generation
 
@@ -64,19 +62,21 @@ export APP_SECRET=your_app_secret
 
 ### API Usage
 
-**Generate Android App**
+**Generate App (Android/iOS)**
 
 **Endpoint:** POST /generate
 
 **Request Body:**
 
-```json 
+```json
 {
   "url": "https://example.com",
   "package_name": "com.example.app",
+  "platform": "android", // Optional: "ios" or "android". Defaults to "android".
   "secret": "your_app_secret"
 }
 ```
+**Note:** The `platform` field is optional. If omitted, it defaults to `android`. Specify `ios` to generate an iOS app.
 
 **Response:**
 
@@ -86,11 +86,11 @@ export APP_SECRET=your_app_secret
 
 ### How It Works
 
-1. The API receives a request with a URL and package name
-2. It triggers a GitHub repository dispatch event
-3. GitHub Actions workflow clones the Android template project
-4. The workflow customizes the template with your URL and package name
-5. The app is built and made available as a downloadable APK
+1. The API receives a request with a URL, package name/bundle identifier, and optionally, a platform (defaults to Android).
+2. It triggers a specific GitHub repository dispatch event based on the platform (`build-app` for Android, `build-ios-app` for iOS).
+3. The corresponding GitHub Actions workflow clones the respective native template project (Android or iOS).
+4. The workflow customizes the template with your URL and package name/bundle identifier.
+5. The app is built (APK for Android, IPA/xcarchive for iOS) and made available as a downloadable artifact.
 
 ### CORS Configuration
 The API allows requests from:

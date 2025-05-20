@@ -1,0 +1,214 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		28B52B8C2CEDA7A000D4C8A9 /* WTMiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B52B8B2CEDA7A000D4C8A9 /* WTMiOSApp.swift */; };
+		28B52B8E2CEDA7A000D4C8A9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B52B8D2CEDA7A000D4C8A9 /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		28B52B882CEDA7A000D4C8A9 /* WTMiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WTMiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28B52B8B2CEDA7A000D4C8A9 /* WTMiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WTMiOSApp.swift; sourceTree = "<group>"; };
+		28B52B8D2CEDA7A000D4C8A9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		28B52B902CEDA7A000D4C8A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		28B52B832CEDA7A000D4C8A9 = {
+			isa = PBXGroup;
+			children = (
+				28B52B8A2CEDA7A000D4C8A9 /* WTMiOS */,
+				28B52B892CEDA7A000D4C8A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		28B52B892CEDA7A000D4C8A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				28B52B882CEDA7A000D4C8A9 /* WTMiOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		28B52B8A2CEDA7A000D4C8A9 /* WTMiOS */ = {
+			isa = PBXGroup;
+			children = (
+				28B52B8B2CEDA7A000D4C8A9 /* WTMiOSApp.swift */,
+				28B52B8D2CEDA7A000D4C8A9 /* ContentView.swift */,
+				28B52B902CEDA7A000D4C8A9 /* Info.plist */,
+			);
+			path = WTMiOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		28B52B872CEDA7A000D4C8A9 /* WTMiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28B52B932CEDA7A000D4C8A9 /* Build configuration list for PBXNativeTarget "WTMiOS" */;
+			buildPhases = (
+				28B52B842CEDA7A000D4C8A9 /* Sources */,
+				28B52B852CEDA7A000D4C8A9 /* Frameworks */,
+				28B52B862CEDA7A000D4C8A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WTMiOS;
+			productName = WTMiOS;
+			productReference = 28B52B882CEDA7A000D4C8A9 /* WTMiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		28B52B822CEDA7A000D4C8A9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+				ORGANIZATIONNAME = "Example";
+				TargetAttributes = {
+					28B52B872CEDA7A000D4C8A9 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+				};
+			};
+			buildConfigurationList = 28B52B8F2CEDA7A000D4C8A9 /* Build configuration list for PBXProject "WTMiOS" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 28B52B832CEDA7A000D4C8A9;
+			productRefGroup = 28B52B892CEDA7A000D4C8A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				28B52B872CEDA7A000D4C8A9 /* WTMiOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		28B52B842CEDA7A000D4C8A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28B52B8E2CEDA7A000D4C8A9 /* ContentView.swift in Sources */,
+				28B52B8C2CEDA7A000D4C8A9 /* WTMiOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28B52B852CEDA7A000D4C8A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		28B52B862CEDA7A000D4C8A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		28B52B912CEDA7A000D4C8A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ""; // NOTE: This will need to be set by the user
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WTMiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.wtmiosplaceholder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		28B52B922CEDA7A000D4C8A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ""; // NOTE: This will need to be set by the user
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WTMiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.wtmiosplaceholder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		28B52B942CEDA7A000D4C8A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		28B52B952CEDA7A000D4C8A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		28B52B8F2CEDA7A000D4C8A9 /* Build configuration list for PBXProject "WTMiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28B52B912CEDA7A000D4C8A9 /* Debug */,
+				28B52B922CEDA7A000D4C8A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28B52B932CEDA7A000D4C8A9 /* Build configuration list for PBXNativeTarget "WTMiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28B52B912CEDA7A000D4C8A9 /* Debug */,
+				28B52B922CEDA7A000D4C8A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 28B52B822CEDA7A000D4C8A9 /* Project object */;
+}
