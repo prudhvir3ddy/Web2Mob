@@ -8,7 +8,17 @@ quickly create a WebView-based Android app from any web URL with a custom packag
 **Work in progress ⚠️:** 
 Build iOS app 
 
-Frontend is hosted in: https://prudhvir3ddy.github.io/wtm
+Note: 
+
+WWDC 2025:
+[Starting from iOS Safari 26, all Add to home screen apps will behave like PWAs
+Without web devs having to support this explicitly.](https://webkit.org/blog/16993/news-from-wwdc25-web-technology-coming-this-fall-in-safari-26-beta/
+)
+
+So I won't be working on the iOS app anymore. 
+
+
+Frontend is hosted at: https://prudhvir3ddy.github.io/wtm
 
 ### Features
 
